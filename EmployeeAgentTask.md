@@ -91,9 +91,9 @@ zkuste vymyslet vlastní rozšíření.
 
 ## 🧰 Pomůcky
 
-- **Připravený PDF soubor:** `Return_and_Delivery_FAQ.pdf` (v repozitáři GitHub)
-- **Apex skript:** `dummydata.script` (v repozitáři GitHub)
-- **Oficiální dokumentace:** [Agentforce Developer Workshop](https://developer.salesforce.com/docs)
+- **Připravený PDF soubor:** [Return_and_Delivery_FAQ.pdf](https://github.com/SustJan/Agentforce-WIT/blob/main/Return_and_Delivery_FAQ.pdf)
+- **Apex skript:** [dummydata.script](https://github.com/SustJan/Agentforce-WIT/blob/main/dummydata.script)
+- **Oficiální dokumentace:** [Agentforce Developer Workshop](https://developer.salesforce.com/docs/einstein/genai/guide)
 
 ---
 
