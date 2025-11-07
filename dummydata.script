@@ -1,0 +1,91 @@
+Date today = Date.today();
+
+List<Account> accounts = new List<Account>{
+    new Account(Name = 'John Smith'),
+    new Account(Name = 'Emily Johnson'),
+    new Account(Name = 'Michael Brown')
+};
+insert accounts;
+
+List<Contact> contacts = new List<Contact>{
+    new Contact(FirstName = 'John', LastName = 'Smith', Email = 'john.smith@example.com', AccountId = accounts[0].Id),
+    new Contact(FirstName = 'Emily', LastName = 'Johnson', Email = 'emily.johnson@example.com', AccountId = accounts[1].Id),
+    new Contact(FirstName = 'Michael', LastName = 'Brown', Email = 'michael.brown@example.com', AccountId = accounts[2].Id)
+};
+insert contacts;
+
+List<Contract> contracts = new List<Contract>();
+for (Account acc : accounts) {
+    contracts.add(new Contract(
+        AccountId    = acc.Id,
+        StartDate    = today.addDays(-14),
+        Status       = 'Draft',
+        ContractTerm = 12,
+        OwnerId      = UserInfo.getUserId()
+    ));
+}
+insert contracts;
+
+List<Order> ordersToInsert = new List<Order>{
+    new Order(AccountId = accounts[0].Id, ContractId = contracts[0].Id, EffectiveDate = today.addDays(-5), Status = 'Draft'),
+    new Order(AccountId = accounts[1].Id, ContractId = contracts[1].Id, EffectiveDate = today.addDays(-3), Status = 'Draft'),
+    new Order(AccountId = accounts[2].Id, ContractId = contracts[2].Id, EffectiveDate = today.addDays(-1), Status = 'Draft')
+};
+insert ordersToInsert;
+
+List<Order> orders = [
+    SELECT Id, OrderNumber, AccountId, EffectiveDate
+    FROM Order
+    WHERE Id IN :ordersToInsert
+];
+
+Order order1 = orders[0];
+Order order2 = orders[1];
+
+List<Case> cases = new List<Case>();
+cases.add(new Case(
+    Origin      = 'Email',
+    Status      = 'New',
+    Subject     = 'Question about complaint procedure',
+    Description = 'Hello, what is the correct procedure if I want to file a complaint about a damaged product?',
+    ContactId   = contacts[0].Id
+));
+cases.add(new Case(
+    Origin      = 'Email',
+    Status      = 'New',
+    Subject     = 'Return policy question',
+    Description = 'Hi, within how many days can I return my order free of charge, and what needs to be included in the return package?',
+    ContactId   = contacts[1].Id
+));
+cases.add(new Case(
+    Origin      = 'Email',
+    Status      = 'New',
+    Subject     = 'Standard delivery time',
+    Description = 'Good afternoon, how long does standard delivery usually take after I place my order?',
+    ContactId   = contacts[2].Id
+));
+cases.add(new Case(
+    Origin      = 'Email',
+    Status      = 'New',
+    Subject     = 'Status of my order ' + order1.OrderNumber,
+    Description = 'Hello, could you please tell me when I can expect the delivery of my order ' + order1.OrderNumber + '?',
+    ContactId   = contacts[0].Id
+));
+cases.add(new Case(
+    Origin      = 'Email',
+    Status      = 'New',
+    Subject     = 'Delivery date for order ' + order2.OrderNumber,
+    Description = 'Hi, I would like to know the expected delivery date for my order ' + order2.OrderNumber + '. Thank you.',
+    ContactId   = contacts[1].Id
+));
+
+insert cases;
+
+System.debug(
+    'Demo data created: ' +
+    accounts.size() + ' Accounts, ' +
+    contacts.size() + ' Contacts, ' +
+    contracts.size() + ' Contracts, ' +
+    orders.size() + ' Orders, ' +
+    cases.size() + ' Cases.'
+);
